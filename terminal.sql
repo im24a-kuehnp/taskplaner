@@ -1,8 +1,5 @@
 use taskplaner;
-CALL CreateUser(
-    'testuser1',
-    '12345'
-);
+
 CALL CreateTask(
     'Flask lernen',
     '2025-05-06 10:00:00',
