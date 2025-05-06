@@ -31,9 +31,6 @@
     {% else %}
         <p>You have no tasks at the moment.</p>
     {% endif %}
-    
-    <br><br>
-    <a href="{{ url_for('home') }}">Back to Home</a>
 
     <form action="{{ url_for('logout') }}" method="POST">
         <button type="submit">Logout</button>

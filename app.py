@@ -48,7 +48,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        
+
         # Query the database for the user
         cursor.execute("SELECT BenutzerID, BenutzerPWD FROM Benutzer WHERE BenutzerName = %s", (username,))
         user_data = cursor.fetchone()
@@ -73,12 +73,21 @@ def register():
         password = request.form['password']
         
         try:
-            # Add the user to the database with plain text password
-            cursor.execute("INSERT INTO Benutzer (BenutzerName, BenutzerPWD) VALUES (%s, %s)", (username, password))
+            # Check if the username already exists in the database
+            cursor.execute("SELECT BenutzerID FROM Benutzer WHERE BenutzerName = %s", (username,))
+            existing_user = cursor.fetchone()
+
+            if existing_user:
+                flash('Username already exists, please choose another.', 'danger')
+                return redirect(url_for('register'))
+
+            # If no existing user, proceed with user creation
+            cursor.execute("Call CreateUser(%s, %s)", (username, password))
             db.commit()
             
             flash('Registered successfully! You can now log in.', 'success')
             return redirect(url_for('login'))
+        
         except Exception as e:
             db.rollback()
             flash(f"Error: {str(e)}", 'danger')
