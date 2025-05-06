@@ -1,6 +1,4 @@
 use taskplaner;
-select * from benutzer;
-
 CALL CreateUser(
     'testuser1',
     '12345'
@@ -15,4 +13,5 @@ CALL CreateTask(
     1, 1, 1, 1
 );
 
-select * from aufgabe
+select * from aufgabe;
+select * from benutzer;
