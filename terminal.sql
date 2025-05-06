@@ -1,7 +1,4 @@
 use taskplaner;
-<<<<<<< HEAD
-select * from benutzer;
-=======
 select * from aufgabe;
 INSERT INTO Benutzer (BenutzerName, BenutzerPWD)
 VALUES ('testuser', '1234');
@@ -15,4 +12,3 @@ CALL CreateTask(
     'Basics von Flask durchgehen',
     1, 1, 1, 1
 );
->>>>>>> b6c2065ce23269961c46b95787f5e1b667f1a5c4

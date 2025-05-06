@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aufgabenübersicht</title>
+</head>
+<body>
+    <h1>Aufgabenliste</h1>
+    <ul>
+        {% for a in aufgaben %}
+        <li><strong>{{ a.Titel }}</strong> – {{ a.Beginn }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

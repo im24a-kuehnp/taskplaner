@@ -24,7 +24,7 @@ db = mysql.connector.connect(
 cursor = db.cursor(dictionary=True)
 
 class User(UserMixin):
-    def __init(self, id, username):
+    def __init__(self, id, username):
         self.id = id
         self.username = username
 
@@ -33,18 +33,19 @@ def load_user(user_id):
     cursor.execute("SELECT BenutzerID, BenutzerName FROM Benutzer WHERE BenutzerID = %s", (user_id,))
     user_data = cursor.fetchone()
     if user_data:
-        return User(id=user_data[0], username=user_data[1])
+        return User(id=user_data["BenutzerID"], username=user_data["BenutzerName"])
     return None
 
 @app.route('/')
 @login_required
-def index():
-    return render_template('index.html')
+def home():
+    print(f"Current user: {current_user.is_authenticated}, {current_user.username}")
+    return render_template('home.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     
     if request.method == 'POST':
         username = request.form['username']
