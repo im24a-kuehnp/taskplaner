@@ -3,6 +3,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 import os
 from dotenv import load_dotenv
 import mysql.connector
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # load enviroment file
 load_dotenv()
@@ -32,6 +33,15 @@ class User(UserMixin):
     def __init__(self, id, username):
         self.id = id
         self.username = username
+
+# function to run sql scripts
+def execute_sql_file(cursor, filepath):
+    with open(filepath, 'r', encoding='utf-8') as file:
+        sql_commands = file.read().split(';')  # Basic split; assumes semicolons end statements
+        for command in sql_commands:
+            command = command.strip()
+            if command:
+                cursor.execute(command)
 
 # loads user from db and creates class instance
 @login_manager.user_loader
@@ -64,7 +74,7 @@ def login():
         cursor.execute("SELECT BenutzerID, BenutzerPWD FROM Benutzer WHERE BenutzerName = %s", (username,))
         user_data = cursor.fetchone()
         
-        if user_data and user_data['BenutzerPWD'] == password:  # Compare plain text password
+        if user_data and check_password_hash(user_data['BenutzerPWD'], password):  # Compare hashed password
             user = User(id=user_data["BenutzerID"], username=username)
             login_user(user)
             flash('Logged in successfully!', 'success')
@@ -77,8 +87,6 @@ def login():
 # register function
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
     
     # get input
     if request.method == 'POST':
@@ -94,8 +102,10 @@ def register():
                 flash('Username already exists, please choose another.', 'danger')
                 return redirect(url_for('register'))
 
+            hashed_password = generate_password_hash(password)
+
             # If no existing user, proceed with user creation
-            cursor.execute("Call CreateUser(%s, %s)", (username, password))
+            cursor.execute("Call CreateUser(%s, %s)", (username, hashed_password))
             db.commit()
             
             flash('Registered successfully! You can now log in.', 'success')
@@ -126,4 +136,5 @@ def logout():
     return redirect(url_for('home'))  # Redirecting the user to the login page after logout
 
 if __name__ == "__main__":
+    print(generate_password_hash("1234"))
     app.run(debug=True)
