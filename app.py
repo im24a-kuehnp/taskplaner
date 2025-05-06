@@ -1,7 +1,9 @@
-from flask import Flask, render_template
+import os
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import mysql.connector
 
 app = Flask(__name__)
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "fallback-key-for-dev")
 
 db = mysql.connector.connect(
     host="localhost",
@@ -11,11 +13,13 @@ db = mysql.connector.connect(
 )
 cursor = db.cursor(dictionary=True)
 
-@app.route("/")
-def home():
-    cursor.execute("Select * From Aufgabe")
+@app.route('/')
+def index():
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM Aufgabe")
     aufgaben = cursor.fetchall()
-    return render_template("home.html", aufgaben=aufgaben)
+    return render_template('index.html', aufgaben=aufgaben)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

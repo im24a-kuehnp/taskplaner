@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Taskplaner</title>
+</head>
+<body>
+    <h1>Aufgaben</h1>
+    <ul>
+        {% for aufgabe in aufgaben %}
+            <li>{{ aufgabe.Titel }} – {{ aufgabe.Beginn }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

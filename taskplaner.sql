@@ -124,13 +124,13 @@ CREATE TABLE AufgabeMaterial(
 -- ********************************************************************************************************
 -- ********************************************************************************************************
 INSERT INTO Material (Material) VALUES (('Notebook'));
-INSERT INTO Material (Material) VALUES (('Pepier'));
+INSERT INTO Material (Material) VALUES (('Papier'));
 INSERT INTO Material (Material) VALUES (('Schreibzeug'));
 INSERT INTO Material (Material) VALUES (('Fachbuch'));
 
 INSERT INTO Kategorie (Kategorie) VALUES (('Hausaufgaben'));
 INSERT INTO Kategorie (Kategorie) VALUES (('Prüfungsvorbereitung'));
-INSERT INTO Kategorie (Kategorie) VALUES (('Exkurion'));
+INSERT INTO Kategorie (Kategorie) VALUES (('Exkursion'));
 INSERT INTO Kategorie (Kategorie) VALUES (('Freiwilliges Lernen'));
 INSERT INTO Kategorie (Kategorie) VALUES (('Einkaufen'));
 INSERT INTO Kategorie (Kategorie) VALUES (('Freizeit'));
