@@ -4,15 +4,19 @@ import os
 from dotenv import load_dotenv
 import mysql.connector
 
+# load enviroment file
 load_dotenv()
 
+# create Flask instance
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "fallback-key-for-dev")
 
+# create LoginManager instance
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+# connect to db
 db = mysql.connector.connect(
     host=os.getenv("DB_HOST"),
     user=os.getenv("DB_USER"),
@@ -20,13 +24,16 @@ db = mysql.connector.connect(
     database=os.getenv("DB_NAME")
 )
 
+#create cursor
 cursor = db.cursor(dictionary=True)
 
+# create User class
 class User(UserMixin):
     def __init__(self, id, username):
         self.id = id
         self.username = username
 
+# loads user from db and creates class instance
 @login_manager.user_loader
 def load_user(user_id):
     cursor.execute("SELECT BenutzerID, BenutzerName FROM Benutzer WHERE BenutzerID = %s", (user_id,))
@@ -35,16 +42,20 @@ def load_user(user_id):
         return User(id=user_data["BenutzerID"], username=user_data["BenutzerName"])
     return None
 
+# home screen
 @app.route('/')
 @login_required
 def home():
     return render_template('home.html')
 
+# login function
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # login already authenticated user
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
     
+    # get input
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -63,11 +74,13 @@ def login():
 
     return render_template('login.html')
 
+# register function
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
     
+    # get input
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -94,6 +107,7 @@ def register():
 
     return render_template('register.html')
 
+# dashboard function
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -103,6 +117,7 @@ def dashboard():
     
     return render_template('dashboard.html', tasks=tasks)
 
+# logout function
 @app.route('/logout', methods=['POST'])
 @login_required
 def logout():
