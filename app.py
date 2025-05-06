@@ -89,10 +89,17 @@ def register():
 @login_required
 def dashboard():
     # Query the database for tasks specific to the logged-in user
-    cursor.execute("SELECT task_id, task_name, task_description, due_date FROM tasks WHERE user_id = %s", (current_user.id,))
+    cursor.execute("SELECT AufgabeID, Titel, Notiz, Ende FROM Aufgabe WHERE BenutzerID = %s", (current_user.id,))
     tasks = cursor.fetchall()  # Fetch all tasks for the user
     
     return render_template('dashboard.html', tasks=tasks)
+
+@app.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    logout_user()  # This logs out the current user
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('home'))  # Redirecting the user to the login page after logout
 
 if __name__ == "__main__":
     app.run(debug=True)
