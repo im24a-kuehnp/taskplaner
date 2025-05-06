@@ -1,5 +1,10 @@
 use taskplaner;
 select * from benutzer;
+<<<<<<< Updated upstream
+=======
+INSERT INTO Benutzer (BenutzerName, BenutzerPWD)
+VALUES ('testuser', '1234');
+>>>>>>> Stashed changes
 
 CALL CreateUser(
     'testuser1',

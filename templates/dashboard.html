@@ -6,7 +6,37 @@
     <title>Dashboard</title>
 </head>
 <body>
-    <h1>Welcome, {{ current_user.username }}!</h1>
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <h1>Welcome to Your Dashboard, {{ current_user.username }}!</h1>
+    
+    <h2>Your Tasks</h2>
+    {% if tasks %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Task Name</th>
+                    <th>Description</th>
+                    <th>Due Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.task_name }}</td>
+                        <td>{{ task.task_description }}</td>
+                        <td>{{ task.due_date }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You have no tasks at the moment.</p>
+    {% endif %}
+    
+    <br><br>
+    <a href="{{ url_for('home') }}">Back to Home</a>
+
+    <form action="{{ url_for('logout') }}" method="POST">
+        <button type="submit">Logout</button>
+    </form>
 </body>
 </html>
