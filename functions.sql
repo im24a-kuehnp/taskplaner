@@ -104,3 +104,122 @@ BEGIN
         p_password
     );
 END //
+
+
+DROP PROCEDURE IF EXISTS DeleteData;
+DELIMITER //
+
+CREATE PROCEDURE DeleteData (
+    IN p_DateiID INT
+)
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM Datei WHERE DateiID = p_DateiID) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'DateiID does not exist';
+    END IF;
+    DELETE FROM Datei WHERE DateiID = p_DateiID;
+END //
+
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS DeleteTaskMaterial;
+DELIMITER //
+
+CREATE PROCEDURE DeleteTaskMaterial (
+    IN p_AufgabeID INT,
+    IN p_MaterialID INT
+)
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM AufgabeMaterial WHERE AufgabeID = p_AufgabeID) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'AufgabeID does not exist';
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM AufgabeMaterial WHERE MaterialID = p_MaterialID) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'MaterialID does not exist';
+    END IF;
+    DELETE FROM AufgabeMaterial
+    WHERE AufgabeID = p_AufgabeID AND MaterialID = p_MaterialID;
+END //
+
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS DeleteTask;
+DELIMITER //
+
+CREATE PROCEDURE DeleteTask (
+    IN p_AufgabeID INT,
+    IN p_force BOOLEAN
+)
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM Aufgabe WHERE AufgabeID = p_AufgabeID) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'MaterialID does not exist';
+    END IF;
+    IF p_force THEN
+
+        -- First delete related task material
+        DELETE FROM AufgabeMaterial
+        WHERE AufgabeID = p_AufgabeID;
+
+        -- Then delete related files
+        DELETE FROM Datei
+        WHERE AufgabeID = p_AufgabeID;
+
+    ELSE
+        -- Check if dependent data exists
+        IF EXISTS (SELECT 1 FROM AufgabeMaterial WHERE AufgabeID = p_AufgabeID) OR
+           EXISTS (SELECT 1 FROM Datei WHERE AufgabeID = p_AufgabeID) THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Task has data';
+        END IF;
+    END IF;
+
+    -- Delete the task itself
+    DELETE FROM Aufgabe WHERE AufgabeID = p_AufgabeID;
+END //
+
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS DeleteUser;
+DELIMITER //
+
+CREATE PROCEDURE DeleteUser (
+    IN p_BenutzerID INT,
+    IN p_deleteDependencies BOOLEAN
+)
+BEGIN
+    IF p_deleteDependencies THEN
+
+        -- Delete all dependent task-material relations
+        DELETE FROM AufgabeMaterial
+        WHERE AufgabeID IN (
+            SELECT AufgabeID FROM Aufgabe WHERE BenutzerID = p_BenutzerID
+        );
+
+        -- Delete all dependent files
+        DELETE FROM Datei
+        WHERE AufgabeID IN (
+            SELECT AufgabeID FROM Aufgabe WHERE BenutzerID = p_BenutzerID
+        );
+
+        -- Delete all tasks of this user
+        DELETE FROM Aufgabe
+        WHERE BenutzerID = p_BenutzerID;
+
+    ELSE
+        -- If dependencies exist, raise error
+        IF EXISTS (SELECT 1 FROM Aufgabe WHERE BenutzerID = p_BenutzerID) THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'User has Tasks';
+        END IF;
+    END IF;
+
+    -- Finally, delete the user
+    DELETE FROM Benutzer WHERE BenutzerID = p_BenutzerID;
+END //
+
+DELIMITER ;
