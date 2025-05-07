@@ -151,6 +151,8 @@ INSERT INTO Fortschritt (Fortschritt) VALUES (('80%'));
 INSERT INTO Fortschritt (Fortschritt) VALUES (('90%'));
 INSERT INTO Fortschritt (Fortschritt) VALUES (('100%'));
 
+SELECT 'database running';
+
 -- ********************************************************************************************************
 -- ********************************************************************************************************
 -- ENDE

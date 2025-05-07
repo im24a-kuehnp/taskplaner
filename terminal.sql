@@ -10,5 +10,15 @@ CALL CreateTask(
     1, 1, 1, 1
 );
 
+-- CALL CreateData(1, 'oki', NULL); -- ICH HAN KA WIE MER DAS MACHT ---> muess de laul frage
+call createtaskmaterial(
+    1,
+    1
+);
+
 select * from aufgabe;
 select * from benutzer;
+select * from aufgabematerial;
+select * from datei;
+
+DELETE from datei;
