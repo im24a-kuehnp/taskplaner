@@ -114,7 +114,8 @@ DELIMITER //
 
 CREATE PROCEDURE CreateTaskMaterial (
     IN p_AufgabeID INT,
-    IN p_MaterialID INT
+    IN p_MaterialID INT,
+    IN p_anzahl INT
 )
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM Aufgabe WHERE AufgabeID = p_AufgabeID) THEN
@@ -127,11 +128,13 @@ BEGIN
     END IF;
     INSERT INTO AufgabeMaterial (
         AufgabeID,
-        MaterialID
+        MaterialID,
+        anzahl
     )
     VALUES (
         p_AufgabeID,
-        p_MaterialID
+        p_MaterialID,
+        p_anzahl
     );
 END //
 
@@ -262,4 +265,28 @@ JOIN
     Prioritaet p ON a.PrioritaetID = p.PrioritaetID
 JOIN
     Fortschritt f ON a.FortschrittID = f.FortschrittID
+
+CREATE OR REPLACE VIEW v_taskdetail AS
+SELECT
+    Titel,
+    Notiz,
+    Beginn,
+    Ende,
+    Ort,
+    Koordinaten,
+    Notiz,
+    Kategorie,
+    Prioritaet,
+    Fortschritt,
+    datei
+FROM
+    Aufgabe a
+JOIN
+    Kategorie k ON a.KategorieID = k.KategorieID
+JOIN
+    Prioritaet p ON a.PrioritaetID = p.PrioritaetID
+JOIN
+    Fortschritt f ON a.FortschrittID = f.FortschrittID
+JOIN
+    Datei d ON a.dateiid = d.dateiid
 

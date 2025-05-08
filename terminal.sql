@@ -13,6 +13,7 @@ CALL CreateTask(
 -- CALL CreateData(1, 'oki', NULL); -- ICH HAN KA WIE MER DAS MACHT ---> muess de laul frage
 call createtaskmaterial(
     1,
+    4,
     1
 );
 
@@ -22,3 +23,4 @@ select * from benutzer;
 select * from aufgabematerial;
 select * from datei;
 select * from v_task;
+select * from AufgabeMaterial;
