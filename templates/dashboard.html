@@ -7,9 +7,9 @@
 </head>
 <body>
     <h1>Welcome to Your Dashboard, {{ current_user.username }}!</h1>
-    <div style="display: flex; justify-content: space-between; align-items: self-end;">
+    <div style="display: flex; justify-content: flex-start; align-items: center; gap: 20px;">
         <h2>Your Tasks</h2>
-        <button onclick='console.log("ctdzu")'>fgvhj</button>
+        <button onclick='openNewTaskPopup()'><strong>New Task</strong></button>
     </div>
     {% if tasks %}
         <table border="1">
@@ -25,7 +25,7 @@
             </thead>
             <tbody>
                 {% for task in tasks %}
-                <tr onclick="openPopup('{{ task.Titel|e }}', '{{ task.Notiz|e }}', '{{ task.Beginn|e }}', '{{ task.Ende|e }}', '{{ task.Ort|e }}', '{{ task.Koordinaten|e }}', '{{ task.Kategorie|e }}', '{{ task.Prioritaet|e }}', '{{ task.Fortschritt|e }}')">
+                <tr onclick="openTaskPopup('{{ task.Titel|e }}', '{{ task.Notiz|e }}', '{{ task.Beginn|e }}', '{{ task.Ende|e }}', '{{ task.Ort|e }}', '{{ task.Koordinaten|e }}', '{{ task.Kategorie|e }}', '{{ task.Prioritaet|e }}', '{{ task.Fortschritt|e }}')">
                         <td>{{ task.Titel }}</td>
                         <td>{{ task.Notiz }}</td>
                         <td>{{ task.Ende }}</td>
@@ -44,7 +44,7 @@
         <button type="submit">Logout</button>
     </form>
 
-    <div id="taskPopup" style="display:none; position:fixed; top:20%; left:30%; width:40%; background:white; border:3px solid black; padding:20px; z-index:1000;">
+    <div id="taskPopup" style="display:none; position:fixed; top:10%; left:30%; width:40%; background:white; border:3px solid black; padding:20px; z-index:1000;">
         <h2 id="popupTitle"></h3>
         <p><strong>Description:</strong> <span id="popupNotiz"></span></p>
         <p><strong>Start Date:</strong> <span id="popupAnfang"></span></p>
@@ -56,11 +56,63 @@
         <p><strong>Progress:</strong> <span id="popupFortschritt"></span></p>
     </div>
 
-    <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; opacity:0.5; z-index:999;" onclick="closePopup()"></div>
+    <div id="newTaskPopup" style="display:none; position:fixed; top:10%; left:30%; width:40%; background:white; border:3px solid black; padding:20px; z-index:1000;">
+        <h3>New Task</h3>
+        <div style="display: flex; gap: 20px;">
+            <!-- Left side: form -->
+            <div style="flex: 1;">
+                <label for="title">Title:</label><br>
+                <input type="text" id="title" name="title"><br><br>
+    
+                <label for="notiz">Description:</label><br>
+                <textarea id="notiz" name="notiz"></textarea><br><br>
+    
+                <label for="anfang">Start Date:</label><br>
+                <input type="date" id="anfang" name="anfang"><br><br>
+    
+                <label for="ende">End Date:</label><br>
+                <input type="date" id="ende" name="ende"><br><br>
+    
+                <label for="ort">Location:</label><br>
+                <input type="text" id="ort" name="ort"><br><br>
+    
+                <label for="koordinaten">Coordinates:</label><br>
+                <input type="text" id="koordinaten" name="koordinaten"><br><br>
+    
+                <label for="kategorie">Category:</label><br>
+                <input type="text" id="kategorie" name="kategorie"><br><br>
+    
+                <label for="prioritaet">Priority:</label><br>
+                <input type="text" id="prioritaet" name="prioritaet"><br><br>
+    
+                <label for="fortschritt">Progress:</label><br>
+                <input type="text" id="fortschritt" name="fortschritt"><br><br>
+    
+                <button onclick="submitNewTask()">Submit Task</button>
+                <button onclick="closeNewTaskPopup()">Cancel</button>
+            </div>
+    
+            <!-- Right side: file drop -->
+            <div 
+                id="fileDropArea"
+                ondragover="event.preventDefault()"
+                ondrop="handleFileDrop(event)"
+                style="flex: 1; border: 2px dashed #aaa; padding: 20px; text-align: center; background-color: #f9f9f9;"
+            >
+                <p>Drag and drop files here</p>
+                <input type="file" id="fileInput" multiple style="display:none;">
+                <button onclick="document.getElementById('fileInput').click()">Select Files</button>
+                <ul id="fileList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="overlay1" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; opacity:0.5; z-index:999;" onclick="closeTaskPopup()"></div>
+
+    <div id="overlay2" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; opacity:0.5; z-index:999;" onclick="closeNewTaskPopup()"></div>
 
     <script>
-    function openPopup(titel, notiz, anfang, ende, ort, koordinaten, kategorie, prioritaet, fortschritt) {
-        console.log("Popup called with:", titel);
+    function openTaskPopup(titel, notiz, anfang, ende, ort, koordinaten, kategorie, prioritaet, fortschritt) {
         document.getElementById('popupTitle').innerText = titel;
         document.getElementById('popupNotiz').innerText = notiz;
         document.getElementById('popupAnfang').innerText = anfang;
@@ -71,13 +123,77 @@
         document.getElementById('popupPrioritaet').innerText = prioritaet;
         document.getElementById('popupFortschritt').innerText = fortschritt;
         document.getElementById('taskPopup').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('overlay1').style.display = 'block';
     }
 
-    function closePopup() {
+    function closeTaskPopup() {
         document.getElementById('taskPopup').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('overlay1').style.display = 'none';
     }
+
+    function openNewTaskPopup() {
+        document.getElementById('newTaskPopup').style.display = 'block'
+        document.getElementById('overlay2').style.display='block'
+    }
+
+    function closeNewTaskPopup() {
+        document.getElementById('newTaskPopup').style.display = 'none'
+        document.getElementById('overlay2').style.display='none'
+    }
+
+    const uploadedFiles = [];
+
+    function handleFileDrop(event) {
+        event.preventDefault();
+        const files = Array.from(event.dataTransfer.files);
+        files.forEach(file => {
+            const blob = new Blob([file], { type: file.type });
+            const fileObj = {
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                blob: blob
+            };
+            uploadedFiles.push(fileObj);
+            displayFile(fileObj);
+        });
+    }
+
+    function displayFile(fileObj) {
+        const list = document.getElementById('fileList');
+        const listItem = document.createElement('li');
+        listItem.innerText = `${fileObj.name} (${Math.round(fileObj.size / 1024)} KB)`;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.innerText = 'Remove';
+        removeBtn.style.marginLeft = '10px';
+        removeBtn.onclick = () => {
+            const index = uploadedFiles.indexOf(fileObj);
+            if (index !== -1) uploadedFiles.splice(index, 1);
+            listItem.remove();
+        };
+
+        listItem.appendChild(removeBtn);
+        list.appendChild(listItem);
+    }
+
+    function handleFileInputChange(event) {
+        const files = Array.from(event.target.files);
+        files.forEach(file => {
+            const blob = new Blob([file], { type: file.type });
+            const fileObj = {
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                blob: blob
+            };
+            uploadedFiles.push(fileObj);
+            displayFile(fileObj);
+        });
+    }
+
+    document.getElementById('fileInput').addEventListener('change', handleFileInputChange);
+
     </script>
 
 </body>
