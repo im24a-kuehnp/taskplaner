@@ -18,6 +18,7 @@ call createtaskmaterial(
 
 select * from aufgabe;
 select * from benutzer;
+<<<<<<< Updated upstream
 select * from aufgabematerial;
 select * from datei;
 select * from v_task;
