@@ -16,14 +16,20 @@
                     <th>Task Name</th>
                     <th>Description</th>
                     <th>Due Date</th>
+                    <th>Category</th>
+                    <th>Priority</th>
+                    <th>Progress</th>
                 </tr>
             </thead>
             <tbody>
                 {% for task in tasks %}
-                    <tr>
+                    <tr onclick="openPopup('{{ task.Title|e }}')">
                         <td>{{ task.Titel }}</td>
                         <td>{{ task.Notiz }}</td>
                         <td>{{ task.Ende }}</td>
+                        <td>{{ task.Kategorie }}</td>
+                        <td>{{ task.Prioritaet }}</td>
+                        <td>{{ task.Fortschritt }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -35,5 +41,36 @@
     <form action="{{ url_for('logout') }}" method="POST">
         <button type="submit">Logout</button>
     </form>
+
+    <div id="taskPopup" style="display:none; position:fixed; top:20%; left:30%; width:40%; background:white; border:1px solid #aaa; padding:20px; z-index:1000;">
+        <h3 id="popupTitle"></h3>
+        <p><strong>Description:</strong> <span id="popupNotiz"></span></p>
+        <p><strong>Due Date:</strong> <span id="popupEnde"></span></p>
+        <p><strong>Category:</strong> <span id="popupKategorie"></span></p>
+        <p><strong>Priority:</strong> <span id="popupPrioritaet"></span></p>
+        <p><strong>Progress:</strong> <span id="popupFortschritt"></span></p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; opacity:0.5; z-index:999;" onclick="closePopup()"></div>
+
+    <script>
+    function openPopup(titel, notiz, ende, kategorie, prioritaet, fortschritt) {
+        document.getElementById('popupTitle').innerText = titel;
+        document.getElementById('popupNotiz').innerText = notiz;
+        document.getElementById('popupEnde').innerText = ende;
+        document.getElementById('popupKategorie').innerText = kategorie;
+        document.getElementById('popupPrioritaet').innerText = prioritaet;
+        document.getElementById('popupFortschritt').innerText = fortschritt;
+        document.getElementById('taskPopup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closePopup() {
+        document.getElementById('taskPopup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+    </script>
+
 </body>
 </html>

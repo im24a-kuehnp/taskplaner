@@ -251,6 +251,7 @@ DELIMITER ;
 
 CREATE OR REPLACE VIEW v_task AS
 SELECT
+    BenutzerID,
     Titel,
     Notiz,
     Ende,

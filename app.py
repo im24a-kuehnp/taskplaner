@@ -123,7 +123,7 @@ def register():
 @login_required
 def dashboard():
     # Query the database for tasks specific to the logged-in user
-    cursor.execute("SELECT AufgabeID, Titel, Notiz, Ende FROM Aufgabe WHERE BenutzerID = %s", (current_user.id,))
+    cursor.execute("SELECT * FROM v_task WHERE BenutzerID = %s", (current_user.id,))
     tasks = cursor.fetchall()  # Fetch all tasks for the user
     
     return render_template('dashboard.html', tasks=tasks)
