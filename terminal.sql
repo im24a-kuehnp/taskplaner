@@ -20,5 +20,4 @@ select * from aufgabe;
 select * from benutzer;
 select * from aufgabematerial;
 select * from datei;
-
-DELETE from datei;
+select * from v_task;

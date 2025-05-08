@@ -103,6 +103,7 @@ def register():
                 return redirect(url_for('register'))
 
             hashed_password = generate_password_hash(password)
+            print(hashed_password)
 
             # If no existing user, proceed with user creation
             cursor.execute("Call CreateUser(%s, %s)", (username, hashed_password))

@@ -62,7 +62,7 @@ CREATE TABLE Fortschritt(
 CREATE TABLE Benutzer(
 	BenutzerID int primary key not null auto_increment,
     BenutzerName varchar(100) not null,
-    BenutzerPWD varchar(255) not null
+    BenutzerPWD varchar(300) not null
 );
 
 

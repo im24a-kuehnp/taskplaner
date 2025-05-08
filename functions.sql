@@ -5,7 +5,7 @@ DELIMITER //
 
 CREATE PROCEDURE CreateUser (
     IN p_name VARCHAR(255),
-    IN p_password VARCHAR(255)
+    IN p_password VARCHAR(300)
 )
 BEGIN
     INSERT INTO Benutzer (
@@ -245,3 +245,21 @@ BEGIN
 END //
 
 DELIMITER ;
+
+CREATE OR REPLACE VIEW v_task AS
+SELECT
+    Titel,
+    Notiz,
+    Ende,
+    Kategorie,
+    Prioritaet,
+    Fortschritt
+FROM
+    Aufgabe a
+JOIN
+    Kategorie k ON a.KategorieID = k.KategorieID
+JOIN
+    Prioritaet p ON a.PrioritaetID = p.PrioritaetID
+JOIN
+    Fortschritt f ON a.FortschrittID = f.FortschrittID
+
