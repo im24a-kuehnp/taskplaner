@@ -136,5 +136,4 @@ def logout():
     return redirect(url_for('home'))  # Redirecting the user to the login page after logout
 
 if __name__ == "__main__":
-    print(generate_password_hash("1234"))
     app.run(debug=True)

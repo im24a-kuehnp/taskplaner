@@ -18,7 +18,13 @@ call createtaskmaterial(
 
 select * from aufgabe;
 select * from benutzer;
+<<<<<<< Updated upstream
 select * from aufgabematerial;
 select * from datei;
 
 DELETE from datei;
+=======
+
+select * from benutzer where BenutzerID = 1;
+select * from Aufgabe where AufgabeID = 1;
+>>>>>>> Stashed changes
