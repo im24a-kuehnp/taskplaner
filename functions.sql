@@ -269,6 +269,7 @@ JOIN
 
 CREATE OR REPLACE VIEW v_taskdetail AS
 SELECT
+    BenutzerID,
     Titel,
     Beginn,
     Ende,
