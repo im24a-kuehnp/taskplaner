@@ -270,7 +270,6 @@ JOIN
 CREATE OR REPLACE VIEW v_taskdetail AS
 SELECT
     Titel,
-    Notiz,
     Beginn,
     Ende,
     Ort,
@@ -278,8 +277,7 @@ SELECT
     Notiz,
     Kategorie,
     Prioritaet,
-    Fortschritt,
-    datei
+    Fortschritt
 FROM
     Aufgabe a
 JOIN
@@ -288,6 +286,3 @@ JOIN
     Prioritaet p ON a.PrioritaetID = p.PrioritaetID
 JOIN
     Fortschritt f ON a.FortschrittID = f.FortschrittID
-JOIN
-    Datei d ON a.dateiid = d.dateiid
-
