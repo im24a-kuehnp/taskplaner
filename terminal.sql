@@ -24,3 +24,5 @@ select * from aufgabematerial;
 select * from datei;
 select * from v_task;
 select * from AufgabeMaterial;
+
+delete from aufgabe;

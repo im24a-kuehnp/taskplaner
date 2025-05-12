@@ -126,9 +126,6 @@ def dashboard():
     cursor.execute("SELECT * FROM v_taskdetail WHERE BenutzerID = %s", (current_user.id,))
     tasks = cursor.fetchall()  # Fetch all tasks for the user
 
-    cursor.execute("SELECT * FROM v_taskdetail WHERE BenutzerID = %s", (current_user.id,))
-    tasks = cursor.fetchall()
-
     # Get dropdown options
     cursor.execute("SELECT KategorieID, Kategorie FROM Kategorie WHERE IstAktiv = TRUE")
     kategorien = cursor.fetchall()
@@ -188,7 +185,7 @@ def add_task():
         db.commit()
 
         flash('Task successfully created!', 'success')
-        return redirect(url_for('dashboard'))  # Replace 'dashboard' with your actual route name
+        return redirect(url_for('dashboard'))
 
     except Exception as e:
         db.rollback()
