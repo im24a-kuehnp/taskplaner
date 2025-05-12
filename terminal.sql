@@ -7,7 +7,7 @@ CALL CreateTask(
     'Zuhause',
     '47.3769, 8.5417',
     'Basics von Flask durchgehen',
-    1, 1, 1, 1
+    1, 1, 1, 2
 );
 
 -- CALL CreateData(1, 'oki', NULL); -- ICH HAN KA WIE MER DAS MACHT ---> muess de laul frage

@@ -125,8 +125,26 @@ def dashboard():
     # Query the database for tasks specific to the logged-in user
     cursor.execute("SELECT * FROM v_taskdetail WHERE BenutzerID = %s", (current_user.id,))
     tasks = cursor.fetchall()  # Fetch all tasks for the user
+
+    cursor.execute("SELECT * FROM v_taskdetail WHERE BenutzerID = %s", (current_user.id,))
+    tasks = cursor.fetchall()
+
+    # Get dropdown options
+    cursor.execute("SELECT KategorieID, Kategorie FROM Kategorie WHERE IstAktiv = TRUE")
+    kategorien = cursor.fetchall()
+
+    cursor.execute("SELECT PrioritaetID, Prioritaet FROM Prioritaet")
+    prioritaeten = cursor.fetchall()
+
+    cursor.execute("SELECT FortschrittID, Fortschritt FROM Fortschritt")
+    fortschritte = cursor.fetchall()
+
+    return render_template('dashboard.html', 
+                         tasks=tasks,
+                         kategorien=kategorien,
+                         prioritaeten=prioritaeten,
+                         fortschritte=fortschritte)
     
-    return render_template('dashboard.html', tasks=tasks)
 
 # logout function
 @app.route('/logout', methods=['POST'])
@@ -136,5 +154,46 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('home'))  # Redirecting the user to the login page after logout
 
+
+
+@app.route('/add_task', methods=['POST'])
+@login_required
+def add_task():
+    try:
+        # Get form data
+        titel = request.form['title']
+        beginn = request.form['anfang']
+        ende = request.form['ende']
+        ort = request.form['ort']
+        koordinaten = request.form['koordinaten']
+        notiz = request.form['notiz']
+        kategorie_id = int(request.form['kategorie'])
+        prioritaet_id = int(request.form['prioritaet'])
+        fortschritt_id = int(request.form['fortschritt'])
+        benutzer_id = current_user.id
+
+        # Call stored procedure
+        cursor.callproc('CreateTask', [
+            titel,
+            beginn,
+            ende,
+            ort,
+            koordinaten,
+            notiz,
+            kategorie_id,
+            prioritaet_id,
+            fortschritt_id,
+            benutzer_id
+        ])
+        db.commit()
+
+        flash('Task successfully created!', 'success')
+        return redirect(url_for('dashboard'))  # Replace 'dashboard' with your actual route name
+
+    except Exception as e:
+        db.rollback()
+        flash(f'Error: {str(e)}', 'danger')
+        return redirect(url_for('dashboard'))
+    
 if __name__ == "__main__":
     app.run(debug=True)

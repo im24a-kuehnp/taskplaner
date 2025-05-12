@@ -80,13 +80,31 @@
                 <input type="text" id="koordinaten" name="koordinaten"><br><br>
     
                 <label for="kategorie">Category:</label><br>
-                <input type="text" id="kategorie" name="kategorie"><br><br>
-    
+                <select id="kategorie" name="kategorie">
+                    {% for kat in kategorien %}
+                        <option value="{{ kat.KategorieID }}">{{ kat.Kategorie }}</option>
+                    {% else %}
+                        <option>No categories available</option>
+                    {% endfor %}
+                </select><br><br>
+
                 <label for="prioritaet">Priority:</label><br>
-                <input type="text" id="prioritaet" name="prioritaet"><br><br>
-    
+                <select id="prioritaet" name="prioritaet">
+                    {% for prio in prioritaeten %}
+                        <option value="{{ prio.PrioritaetID }}">{{ prio.Prioritaet }}</option>
+                    {% else %}
+                        <option>No priorities available</option>
+                    {% endfor %}
+                </select><br><br>
+
                 <label for="fortschritt">Progress:</label><br>
-                <input type="text" id="fortschritt" name="fortschritt"><br><br>
+                <select id="fortschritt" name="fortschritt">
+                    {% for fort in fortschritte %}
+                        <option value="{{ fort.FortschrittID }}">{{ fort.Fortschritt }}</option>
+                    {% else %}
+                        <option>No progress options available</option>
+                    {% endfor %}
+                </select><br><br>
     
                 <button onclick="submitNewTask()">Submit Task</button>
                 <button onclick="closeNewTaskPopup()">Cancel</button>
@@ -175,6 +193,43 @@
 
         listItem.appendChild(removeBtn);
         list.appendChild(listItem);
+    }
+
+    function submitNewTask() {
+        const formData = new FormData();
+
+        // Add text fields
+        formData.append('title', document.getElementById('title').value);
+        formData.append('notiz', document.getElementById('notiz').value);
+        formData.append('anfang', document.getElementById('anfang').value);
+        formData.append('ende', document.getElementById('ende').value);
+        formData.append('ort', document.getElementById('ort').value);
+        formData.append('koordinaten', document.getElementById('koordinaten').value);
+        formData.append('kategorie', document.getElementById('kategorie').value);
+        formData.append('prioritaet', document.getElementById('prioritaet').value);
+        formData.append('fortschritt', document.getElementById('fortschritt').value);
+
+        // Add uploaded files
+        // uploadedFiles.forEach((fileObj, i) => {
+        //    formData.append(`file${i}`, fileObj.blob, fileObj.name);
+        // });
+
+        fetch('/add_task', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                //alert("Task submitted successfully!"); --> das isch so ein popup gsi kb popups ha
+                location.reload();  // Reload page to show new task
+            } else {
+                alert("Failed to submit task.");
+            }
+        })
+        .catch(error => {
+            console.error("Error submitting task:", error);
+            alert("An error occurred.");
+        });
     }
 
     function handleFileInputChange(event) {

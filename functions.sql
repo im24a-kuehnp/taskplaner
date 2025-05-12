@@ -287,3 +287,4 @@ JOIN
     Prioritaet p ON a.PrioritaetID = p.PrioritaetID
 JOIN
     Fortschritt f ON a.FortschrittID = f.FortschrittID
+END //
