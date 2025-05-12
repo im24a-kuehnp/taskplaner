@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import os
 from dotenv import load_dotenv
@@ -191,6 +191,30 @@ def add_task():
         db.rollback()
         flash(f'Error: {str(e)}', 'danger')
         return redirect(url_for('dashboard'))
+    
+@app.route('/delete_task/<int:task_id>', methods=['DELETE'])
+@login_required
+def delete_task(task_id):
+    try:
+        # First verify the task belongs to the current user
+        cursor.execute("SELECT BenutzerID FROM Aufgabe WHERE AufgabeID = %s", (task_id,))
+        task_owner = cursor.fetchone()
+        
+        if not task_owner:
+            return jsonify({'success': False, 'message': 'Task not found'}), 404
+            
+        if task_owner['BenutzerID'] != current_user.id:
+            return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+            
+        # Call the stored procedure to delete the task
+        cursor.callproc('DeleteTask', [task_id, False])  # False = don't force delete
+        db.commit()
+        
+        return  jsonify({'success': True, 'message': 'Task deleted'})
+        
+    except Exception as e:
+        db.rollback()
+        return jsonify({'success': False, 'message': str(e)}), 500
     
 if __name__ == "__main__":
     app.run(debug=True)

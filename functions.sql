@@ -265,8 +265,8 @@ JOIN
 JOIN
     Prioritaet p ON a.PrioritaetID = p.PrioritaetID
 JOIN
-    Fortschritt f ON a.FortschrittID = f.FortschrittID
-
+    Fortschritt f ON a.FortschrittID = f.FortschrittID;
+    
 CREATE OR REPLACE VIEW v_taskdetail AS
 SELECT
     BenutzerID,
@@ -278,7 +278,8 @@ SELECT
     Notiz,
     Kategorie,
     Prioritaet,
-    Fortschritt
+    Fortschritt,
+    AufgabeID
 FROM
     Aufgabe a
 JOIN
@@ -286,5 +287,4 @@ JOIN
 JOIN
     Prioritaet p ON a.PrioritaetID = p.PrioritaetID
 JOIN
-    Fortschritt f ON a.FortschrittID = f.FortschrittID
-END //
+    Fortschritt f ON a.FortschrittID = f.FortschrittID;
