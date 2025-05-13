@@ -1,8 +1,9 @@
 USE taskplaner;
-
+-- end
 DROP PROCEDURE IF EXISTS CreateUser;
+-- end
 DELIMITER //
-
+-- end
 CREATE PROCEDURE CreateUser (
     IN p_name VARCHAR(255),
     IN p_password VARCHAR(300)
@@ -17,11 +18,13 @@ BEGIN
         p_password
     );
 END //
-
+-- end
 DELIMITER ;
-
+-- end
 DROP PROCEDURE if exists createtask;
+-- end
 DELIMITER //
+-- end
 CREATE PROCEDURE CreateTask (
     IN p_Titel VARCHAR(255),
     IN p_Beginn DATETIME,
@@ -80,12 +83,13 @@ BEGIN
         p_BenutzerID
     );
 END //
-
+-- end
 DELIMITER ;
-
+-- end
 DROP PROCEDURE IF EXISTS CreateData; -- ICH HAN KA WIE MER DAS MACHT ---> muess de laul frage
+-- end
 DELIMITER //
-
+-- end
 CREATE PROCEDURE CreateData ( -- ICH HAN KA WIE MER DAS MACHT ---> muess de laul frage
     IN p_Aufgabeid int,
     IN p_Dateipfad VARCHAR(255),
@@ -108,10 +112,11 @@ BEGIN
         p_DateiBLOB
     );
 END //
-
+-- end
 DROP PROCEDURE IF EXISTS CreateTaskMaterial;
+-- end
 DELIMITER //
-
+-- end
 CREATE PROCEDURE CreateTaskMaterial (
     IN p_AufgabeID INT,
     IN p_MaterialID INT,
@@ -137,12 +142,13 @@ BEGIN
         p_anzahl
     );
 END //
-
+-- end
 DELIMITER ;
-
+-- end
 DROP PROCEDURE IF EXISTS DeleteData;
+-- end
 DELIMITER //
-
+-- end
 CREATE PROCEDURE DeleteData (
     IN p_DateiID INT
 )
@@ -155,10 +161,12 @@ BEGIN
 END //
 
 DELIMITER ;
-
+-- end
 
 DROP PROCEDURE IF EXISTS DeleteTaskMaterial;
+-- end
 DELIMITER //
+-- end
 
 CREATE PROCEDURE DeleteTaskMaterial (
     IN p_AufgabeID INT,
@@ -176,12 +184,14 @@ BEGIN
     DELETE FROM AufgabeMaterial
     WHERE AufgabeID = p_AufgabeID AND MaterialID = p_MaterialID;
 END //
-
+-- end
 DELIMITER ;
-
+-- end
 
 DROP PROCEDURE IF EXISTS DeleteTask;
+-- end
 DELIMITER //
+-- end
 
 CREATE PROCEDURE DeleteTask (
     IN p_AufgabeID INT,
@@ -210,13 +220,14 @@ BEGIN
 
     DELETE FROM Aufgabe WHERE AufgabeID = p_AufgabeID;
 END //
-
+-- end
 DELIMITER ;
-
+-- end
 
 DROP PROCEDURE IF EXISTS DeleteUser;
+-- end
 DELIMITER //
-
+-- end
 CREATE PROCEDURE DeleteUser (
     IN p_BenutzerID INT,
     IN p_force BOOLEAN
@@ -246,9 +257,9 @@ BEGIN
 
     DELETE FROM Benutzer WHERE BenutzerID = p_BenutzerID;
 END //
-
+-- end
 DELIMITER ;
-
+-- end
 CREATE OR REPLACE VIEW v_task AS
 SELECT
     BenutzerID,
@@ -266,7 +277,8 @@ JOIN
     Prioritaet p ON a.PrioritaetID = p.PrioritaetID
 JOIN
     Fortschritt f ON a.FortschrittID = f.FortschrittID;
-    
+-- end
+
 CREATE OR REPLACE VIEW v_taskdetail AS
 SELECT
     BenutzerID,
@@ -288,3 +300,4 @@ JOIN
     Prioritaet p ON a.PrioritaetID = p.PrioritaetID
 JOIN
     Fortschritt f ON a.FortschrittID = f.FortschrittID;
+-- end
