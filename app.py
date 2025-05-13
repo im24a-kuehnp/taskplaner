@@ -37,7 +37,7 @@ class User(UserMixin):
 # function to run sql scripts
 def execute_sql_file(cursor, filepath):
     with open(filepath, 'r', encoding='utf-8') as file:
-        sql_commands = file.read().split(';')  # Basic split; assumes semicolons end statements
+        sql_commands = file.read().split('-- end')  # Basic split; assumes semicolons end statements
         for command in sql_commands:
             command = command.strip()
             if command:
@@ -207,7 +207,7 @@ def delete_task(task_id):
             return jsonify({'success': False, 'message': 'Unauthorized'}), 403
             
         # Call the stored procedure to delete the task
-        cursor.callproc('DeleteTask', [task_id, False])  # False = don't force delete
+        cursor.callproc('DeleteTask', [task_id, True])  # False = don't force delete
         db.commit()
         
         return  jsonify({'success': True, 'message': 'Task deleted'})
@@ -217,4 +217,5 @@ def delete_task(task_id):
         return jsonify({'success': False, 'message': str(e)}), 500
     
 if __name__ == "__main__":
+    # execute_sql_file(cursor, r"C:\Users\anmel\GithubRepos\Flask\functions.sql")
     app.run(debug=True)
