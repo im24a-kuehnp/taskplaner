@@ -21,21 +21,17 @@
                     <th>Category</th>
                     <th>Priority</th>
                     <th>Progress</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for task in tasks %}
-                <tr onclick="openTaskPopup('{{ task.Titel|e }}', '{{ task.Notiz|e }}', '{{ task.Beginn|e }}', '{{ task.Ende|e }}', '{{ task.Ort|e }}', '{{ task.Koordinaten|e }}', '{{ task.Kategorie|e }}', '{{ task.Prioritaet|e }}', '{{ task.Fortschritt|e }}')">
+                <tr onclick="openTaskPopup('{{ task.Titel|e }}', '{{ task.Notiz|e }}', '{{ task.Beginn|e }}', '{{ task.Ende|e }}', '{{ task.Ort|e }}', '{{ task.Koordinaten|e }}', '{{ task.Kategorie|e }}', '{{ task.Prioritaet|e }}', '{{ task.Fortschritt|e }}', '{{ task.AufgabeID|e }}')">
                         <td>{{ task.Titel }}</td>
                         <td>{{ task.Notiz }}</td>
                         <td>{{ task.Ende }}</td>
                         <td>{{ task.Kategorie }}</td>
                         <td>{{ task.Prioritaet }}</td>
                         <td>{{ task.Fortschritt }}</td>
-                        <td>
-                            <button onclick="deleteTask(event, '{{ task.AufgabeID }}')">Delete</button>
-                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -58,6 +54,7 @@
         <p><strong>Category:</strong> <span id="popupKategorie"></span></p>
         <p><strong>Priority:</strong> <span id="popupPrioritaet"></span></p>
         <p><strong>Progress:</strong> <span id="popupFortschritt"></span></p>
+        <button id="popupDoneButton">Delete</button>
     </div>
 
     <div id="newTaskPopup" style="display:none; position:fixed; top:10%; left:30%; width:40%; background:white; border:3px solid black; padding:20px; z-index:1000;">
@@ -134,7 +131,7 @@
     <div id="overlay2" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; opacity:0.5; z-index:999;" onclick="closeNewTaskPopup()"></div>
 
     <script>
-    function openTaskPopup(titel, notiz, anfang, ende, ort, koordinaten, kategorie, prioritaet, fortschritt) {
+    function openTaskPopup(titel, notiz, anfang, ende, ort, koordinaten, kategorie, prioritaet, fortschritt, aufgabeID) {
         document.getElementById('popupTitle').innerText = titel;
         document.getElementById('popupNotiz').innerText = notiz;
         document.getElementById('popupAnfang').innerText = anfang;
@@ -146,6 +143,9 @@
         document.getElementById('popupFortschritt').innerText = fortschritt;
         document.getElementById('taskPopup').style.display = 'block';
         document.getElementById('overlay1').style.display = 'block';
+        const doneButton = document.getElementById('popupDoneButton');
+        doneButton.onclick = function(event) {deleteTask(event, aufgabeID);}
+        ;
     }
 
     function closeTaskPopup() {
@@ -229,15 +229,17 @@
         const formData = new FormData();
 
         // Add text fields
-        formData.append('title', document.getElementById('title').value);
-        formData.append('notiz', document.getElementById('notiz').value);
-        formData.append('anfang', document.getElementById('anfang').value);
-        formData.append('ende', document.getElementById('ende').value);
-        formData.append('ort', document.getElementById('ort').value);
-        formData.append('koordinaten', document.getElementById('koordinaten').value);
-        formData.append('kategorie', document.getElementById('kategorie').value);
-        formData.append('prioritaet', document.getElementById('prioritaet').value);
-        formData.append('fortschritt', document.getElementById('fortschritt').value);
+        const getToday = () => new Date().toISOString().split('T')[0];
+        const getVal = (id, defaultVal = '') => document.getElementById(id)?.value?.trim() || defaultVal;
+        formData.append('title', getVal('title', 'Untitled Task'));
+        formData.append('notiz', getVal('notiz', 'Keine Notiz'));
+        formData.append('anfang', getVal('anfang', getToday()));
+        formData.append('ende', getVal('ende', getToday()));
+        formData.append('ort', getVal('ort', 'Unbekannter Ort'));
+        formData.append('koordinaten', getVal('koordinaten', '0,0'));
+        formData.append('kategorie', getVal('kategorie', 'Hausaufgaben'));
+        formData.append('prioritaet', getVal('prioritaet', 'Hoch'));
+        formData.append('fortschritt', getVal('fortschritt', '0%'));
 
         // Add uploaded files
         // uploadedFiles.forEach((fileObj, i) => {
