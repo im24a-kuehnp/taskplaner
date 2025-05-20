@@ -210,7 +210,7 @@ def delete_task(task_id):
         cursor.callproc('DeleteTask', [task_id, True])  # False = don't force delete
         db.commit()
         
-        return  "ok" #jsonify({'success': True, 'message': 'Task deleted'})
+        return jsonify({'success': True, 'message': 'Task deleted'})
         
     except Exception as e:
         db.rollback()

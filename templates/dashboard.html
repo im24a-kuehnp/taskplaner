@@ -133,7 +133,7 @@
             <!-- Left side: form -->
             <div style="flex: 1;">
                 <label for="title">Title:</label><br>
-                <input type="text" id="title" name="title"><br><br>
+                <input type="text" id="title" name="title" value="laron"><br><br>
     
                 <label for="notiz">Description:</label><br>
                 <textarea id="notiz" name="notiz"></textarea><br><br>
@@ -201,7 +201,7 @@
 
     <script>
     function openTaskPopup(titel, notiz, anfang, ende, ort, koordinaten, kategorie, prioritaet, fortschritt, aufgabeID) {
-        document.getElementById('popupTitle').innerText = titel;
+        document.getElementById('popupTitle').value = titel;
         document.getElementById('popupNotiz').innerText = notiz;
         document.getElementById('popupAnfang').innerText = anfang;
         document.getElementById('popupEnde').innerText = ende;
@@ -213,11 +213,14 @@
         document.getElementById('taskPopup').style.display = 'block';
         document.getElementById('overlay1').style.display = 'block';
         const doneButton = document.getElementById('popupDoneButton');
-        doneButton.onclick = function(event) {deleteTask(event, aufgabeID);}
-        ;
+        doneButton.onclick = function(event) {
+            deleteTask(event, aufgabeID);
+        };
+
         const editButton = document.getElementById('popupEditButton');
-        doneButton.onclick = function(event) {editTask(event, aufgabeID);}
-        ;
+        editButton.onclick = function(event) {
+            openEditTaskPopup(titel, notiz, anfang, ende, ort, koordinaten, kategorie, prioritaet, fortschritt, aufgabeID);
+        };
     }
 
     function closeTaskPopup() {
@@ -236,6 +239,7 @@
     }
 
     function openEditTaskPopup(titel, notiz, anfang, ende, ort, koordinaten, kategorie, prioritaet, fortschritt, aufgabeID) {
+        closeTaskPopup()
         document.getElementById('title').innerText = titel;
         document.getElementById('notiz').innerText = notiz;
         document.getElementById('anfang').innerText = anfang;
@@ -245,7 +249,7 @@
         document.getElementById('kategorie').innerText = kategorie;
         document.getElementById('prioritaet').innerText = prioritaet;
         document.getElementById('fortschritt').innerText = fortschritt;
-        document.getElementById('taskPopup').style.display = 'block';
+        document.getElementById('EditTaskPopup').style.display = 'block';
         document.getElementById('overlay1').style.display = 'block';
         const doneButton = document.getElementById('popupDoneButton');
         doneButton.onclick = function(event) {deleteTask(event, aufgabeID);}
