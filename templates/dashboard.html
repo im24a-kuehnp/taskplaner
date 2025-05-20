@@ -55,6 +55,7 @@
         <p><strong>Priority:</strong> <span id="popupPrioritaet"></span></p>
         <p><strong>Progress:</strong> <span id="popupFortschritt"></span></p>
         <button id="popupDoneButton">Delete</button>
+        <button id="popupEditButton">Edit</button>
     </div>
 
     <div id="newTaskPopup" style="display:none; position:fixed; top:10%; left:30%; width:40%; background:white; border:3px solid black; padding:20px; z-index:1000;">
@@ -146,6 +147,9 @@
         const doneButton = document.getElementById('popupDoneButton');
         doneButton.onclick = function(event) {deleteTask(event, aufgabeID);}
         ;
+        const editButton = document.getElementById('popupEditButton');
+        doneButton.onclick = function(event) {editTask(event, aufgabeID);}
+        ;
     }
 
     function closeTaskPopup() {
@@ -224,6 +228,10 @@
         });
     }
 }
+
+    function editTask(event, taskid) {
+        
+    }
 
     function submitNewTask() {
         const formData = new FormData();
