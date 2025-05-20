@@ -1,9 +1,9 @@
 USE taskplaner;
--- end
+ 
 DROP PROCEDURE IF EXISTS CreateUser;
--- end
+  
 DELIMITER //
--- end
+  
 CREATE PROCEDURE CreateUser (
     IN p_name VARCHAR(255),
     IN p_password VARCHAR(300)
@@ -18,13 +18,13 @@ BEGIN
         p_password
     );
 END //
--- end
+  
 DELIMITER ;
--- end
+  
 DROP PROCEDURE if exists createtask;
--- end
+  
 DELIMITER //
--- end
+  
 CREATE PROCEDURE CreateTask (
     IN p_Titel VARCHAR(255),
     IN p_Beginn DATETIME,
@@ -83,13 +83,13 @@ BEGIN
         p_BenutzerID
     );
 END //
--- end
+  
 DELIMITER ;
--- end
+  
 DROP PROCEDURE IF EXISTS CreateData; -- ICH HAN KA WIE MER DAS MACHT ---> muess de laul frage
--- end
+  
 DELIMITER //
--- end
+  
 CREATE PROCEDURE CreateData ( -- ICH HAN KA WIE MER DAS MACHT ---> muess de laul frage
     IN p_Aufgabeid int,
     IN p_Dateipfad VARCHAR(255),
@@ -112,11 +112,11 @@ BEGIN
         p_DateiBLOB
     );
 END //
--- end
+  
 DROP PROCEDURE IF EXISTS CreateTaskMaterial;
--- end
+  
 DELIMITER //
--- end
+  
 CREATE PROCEDURE CreateTaskMaterial (
     IN p_AufgabeID INT,
     IN p_MaterialID INT,
@@ -142,13 +142,13 @@ BEGIN
         p_anzahl
     );
 END //
--- end
+  
 DELIMITER ;
--- end
+  
 DROP PROCEDURE IF EXISTS DeleteData;
--- end
+  
 DELIMITER //
--- end
+  
 CREATE PROCEDURE DeleteData (
     IN p_DateiID INT
 )
@@ -161,12 +161,12 @@ BEGIN
 END //
 
 DELIMITER ;
--- end
+  
 
 DROP PROCEDURE IF EXISTS DeleteTaskMaterial;
--- end
+  
 DELIMITER //
--- end
+  
 
 CREATE PROCEDURE DeleteTaskMaterial (
     IN p_AufgabeID INT,
@@ -184,14 +184,14 @@ BEGIN
     DELETE FROM AufgabeMaterial
     WHERE AufgabeID = p_AufgabeID AND MaterialID = p_MaterialID;
 END //
--- end
+  
 DELIMITER ;
--- end
+  
 
 DROP PROCEDURE IF EXISTS DeleteTask;
--- end
+  
 DELIMITER //
--- end
+  
 
 CREATE PROCEDURE DeleteTask (
     IN p_AufgabeID INT,
@@ -220,14 +220,14 @@ BEGIN
 
     DELETE FROM Aufgabe WHERE AufgabeID = p_AufgabeID;
 END //
--- end
+  
 DELIMITER ;
--- end
+  
 
 DROP PROCEDURE IF EXISTS DeleteUser;
--- end
+  
 DELIMITER //
--- end
+  
 CREATE PROCEDURE DeleteUser (
     IN p_BenutzerID INT,
     IN p_force BOOLEAN
@@ -257,9 +257,9 @@ BEGIN
 
     DELETE FROM Benutzer WHERE BenutzerID = p_BenutzerID;
 END //
--- end
+  
 DELIMITER ;
--- end
+  
 CREATE OR REPLACE VIEW v_task AS
 SELECT
     BenutzerID,
@@ -277,7 +277,7 @@ JOIN
     Prioritaet p ON a.PrioritaetID = p.PrioritaetID
 JOIN
     Fortschritt f ON a.FortschrittID = f.FortschrittID;
--- end
+  
 
 CREATE OR REPLACE VIEW v_taskdetail AS
 SELECT
@@ -300,4 +300,52 @@ JOIN
     Prioritaet p ON a.PrioritaetID = p.PrioritaetID
 JOIN
     Fortschritt f ON a.FortschrittID = f.FortschrittID;
--- end
+
+DROP PROCEDURE IF EXISTS UpdateTask;
+DELIMITER //
+
+CREATE PROCEDURE UpdateTask (
+    IN p_AufgabeID INT,
+    IN p_Titel VARCHAR(255),
+    IN p_Beginn DATETIME,
+    IN p_Ende DATETIME,
+    IN p_Ort VARCHAR(255),
+    IN p_Koordinaten VARCHAR(255),
+    IN p_Notiz TEXT,
+    IN p_KategorieID INT,
+    IN p_PrioritaetID INT,
+    IN p_FortschrittID INT
+)
+BEGIN
+    -- Validate foreign keys
+    IF NOT EXISTS (SELECT 1 FROM Kategorie WHERE KategorieID = p_KategorieID) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid KategorieID';
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM Prioritaet WHERE PrioritaetID = p_PrioritaetID) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid PrioritaetID';
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM Fortschritt WHERE FortschrittID = p_FortschrittID) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid FortschrittID';
+    END IF;
+    
+    -- Update task
+    UPDATE Aufgabe SET
+        Titel = p_Titel,
+        Beginn = p_Beginn,
+        Ende = p_Ende,
+        Ort = p_Ort,
+        Koordinaten = p_Koordinaten,
+        Notiz = p_Notiz,
+        KategorieID = p_KategorieID,
+        PrioritaetID = p_PrioritaetID,
+        FortschrittID = p_FortschrittID
+    WHERE AufgabeID = p_AufgabeID;
+    
+    IF ROW_COUNT() = 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Task not found or no changes made';
+    END IF;
+END //
+
+DELIMITER ;

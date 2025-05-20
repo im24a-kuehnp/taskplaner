@@ -37,7 +37,7 @@ class User(UserMixin):
 # function to run sql scripts
 def execute_sql_file(cursor, filepath):
     with open(filepath, 'r', encoding='utf-8') as file:
-        sql_commands = file.read().split('-- end')  # Basic split; assumes semicolons end statements
+        sql_commands = file.read().split('-- end')
         for command in sql_commands:
             command = command.strip()
             if command:
@@ -210,7 +210,7 @@ def delete_task(task_id):
         cursor.callproc('DeleteTask', [task_id, True])  # False = don't force delete
         db.commit()
         
-        return  jsonify({'success': True, 'message': 'Task deleted'})
+        return  "ok" #jsonify({'success': True, 'message': 'Task deleted'})
         
     except Exception as e:
         db.rollback()
