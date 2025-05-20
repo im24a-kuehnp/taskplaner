@@ -37,7 +37,7 @@ class User(UserMixin):
 # function to run sql scripts
 def execute_sql_file(cursor, filepath):
     with open(filepath, 'r', encoding='utf-8') as file:
-        sql_commands = file.read().split('-- end')  # Basic split; assumes semicolons end statements
+        sql_commands = file.read().split('-- end')
         for command in sql_commands:
             command = command.strip()
             if command:
