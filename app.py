@@ -191,6 +191,54 @@ def add_task():
         db.rollback()
         flash(f'Error: {str(e)}', 'danger')
         return redirect(url_for('dashboard'))
+
+@app.route('/edit_task', methods=['POST'])
+@login_required
+def edit_task():
+    try:
+        # Get form data
+        titel = request.form.get('title')
+        beginn = request.form.get('anfang')
+        ende = request.form.get('ende')
+        ort = request.form.get('ort')
+        koordinaten = request.form.get('koordinaten')
+        notiz = request.form.get('notiz')
+        kategorie_id = int(request.form.get('kategorie'))
+        prioritaet_id = int(request.form.get('prioritaet'))
+        fortschritt_id = int(request.form.get('fortschritt'))
+        aufgabe_id = int(request.form.get('task_id'))
+        benutzer_id = current_user.id
+
+        # Verify the task belongs to the current user
+        cursor.execute("SELECT BenutzerID FROM Aufgabe WHERE AufgabeID = %s", (aufgabe_id,))
+        task_owner = cursor.fetchone()
+        
+        if not task_owner or task_owner['BenutzerID'] != benutzer_id:
+            flash('Unauthorized to edit this task', 'danger')
+            return redirect(url_for('dashboard'))
+
+        # Call stored procedure
+        cursor.callproc('UpdateTask', [
+            aufgabe_id,
+            titel,
+            beginn,
+            ende,
+            ort,
+            koordinaten,
+            notiz,
+            kategorie_id,
+            prioritaet_id,
+            fortschritt_id
+        ])
+        db.commit()
+
+        flash('Task successfully updated!', 'success')
+        return redirect(url_for('dashboard'))
+
+    except Exception as e:
+        db.rollback()
+        flash(f'Error: {str(e)}', 'danger')
+        return redirect(url_for('dashboard'))
     
 @app.route('/delete_task/<int:task_id>', methods=['DELETE'])
 @login_required
