@@ -344,7 +344,7 @@
 function deleteall(userid) {
     if (confirm('Are you sure you want to delete all task?')) {
         console.log('Attempting to delete tasks');
-        fetch(`/delete_task/${taskId}`, {
+        fetch(`/delete_all`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
