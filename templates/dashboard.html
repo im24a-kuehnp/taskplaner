@@ -345,7 +345,7 @@ function deleteall(userid) {
     if (confirm('Are you sure you want to delete all task?')) {
         console.log('Attempting to delete tasks');
         fetch(`/delete_all`, {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -355,12 +355,12 @@ function deleteall(userid) {
                 //alert('Task deleted successfully!');
                 location.reload(); // Refresh the page
             } else {
-                alert('Failed to delete task.');
+                alert('Failed to delete tasks.');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('An error occurred while deleting the task.');
+            alert('An error occurred while deleting the tasks.');
         });
     }
 }

@@ -157,6 +157,7 @@ def deleteall():
     try:     
         # Call the stored procedure to delete the task
         cursor.callproc('DeleteAllTasks', [current_user.id, True])  # False = don't force delete
+        print(current_user.id)
         db.commit()
         
         return jsonify({'success': True, 'message': 'Task deleted'})
