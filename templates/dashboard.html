@@ -342,21 +342,20 @@
 
     function SubmitEditTask() {
         const taskId = document.getElementById('EditTaskPopup').dataset.taskId;
-        
+        const getToday = () => new Date().toISOString().split('T')[0];
         // Create form data object
         const formData = {
             task_id: taskId,
-            title: document.getElementById('editTitle').value,
-            notiz: document.getElementById('editNotiz').value,
-            anfang: document.getElementById('editAnfang').value,
-            ende: document.getElementById('editEnde').value,
-            ort: document.getElementById('editOrt').value,
-            koordinaten: document.getElementById('editKoordinaten').value,
-            kategorie: document.getElementById('editKategorie').value,
-            prioritaet: document.getElementById('editPrioritaet').value,
-            fortschritt: document.getElementById('editFortschritt').value
-        };
-        console.log(formData)
+            title: document.getElementById('editTitle').value || 'Untitled Task',
+            notiz: document.getElementById('editNotiz').value || 'Keine Notiz',
+            anfang: document.getElementById('editAnfang').value || getToday(), 
+            ende: document.getElementById('editEnde').value || getToday(),
+            ort: document.getElementById('editOrt').value || 'Unbekannter Ort',
+            koordinaten: document.getElementById('editKoordinaten').value || "0,0",
+            kategorie: document.getElementById('editKategorie').value,  
+            prioritaet: document.getElementById('editPrioritaet').value, 
+            fortschritt: document.getElementById('editFortschritt').value 
+                };
         fetch('/edit_task', {
             method: 'POST',
             headers: {
