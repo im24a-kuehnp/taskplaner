@@ -222,6 +222,50 @@ BEGIN
 END //
   
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS DeleteAllTasks;
+  
+DELIMITER //
+  
+
+CREATE PROCEDURE DeleteAllTask (
+    IN p_BenutzerID INT,
+    IN p_force BOOLEAN
+)
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM Aufgabe WHERE BenutzerID = p_BenutzerID) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'User has no aufgaben';
+    END IF;
+    IF p_force THEN
+
+        DELETE FROM AufgabeMaterial
+        WHERE AufgabeID IN (
+            SELECT AufgabeID FROM Aufgabe WHERE BenutzerID = p_BenutzerID
+        );
+
+        DELETE FROM Datei
+        WHERE AufgabeID IN (
+            SELECT AufgabeID FROM Aufgabe WHERE BenutzerID = p_BenutzerID
+        );
+
+    ELSE
+        IF EXISTS (
+            SELECT 1 FROM AufgabeMaterial 
+            WHERE AufgabeID IN (SELECT AufgabeID FROM Aufgabe WHERE BenutzerID = p_BenutzerID)
+        ) OR EXISTS (
+            SELECT 1 FROM Datei 
+            WHERE AufgabeID IN (SELECT AufgabeID FROM Aufgabe WHERE BenutzerID = p_BenutzerID)
+        ) THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'At least one task has related data';
+        END IF;
+    END IF;
+
+    DELETE FROM Aufgabe WHERE BenutzerID = p_BenutzerID;
+END //
+  
+DELIMITER ;
   
 
 DROP PROCEDURE IF EXISTS DeleteUser;

@@ -151,7 +151,19 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('home'))  # Redirecting the user to the login page after logout
 
-
+@app.route('/delete_all', methods=['POST'])
+@login_required
+def deleteall():
+    try:     
+        # Call the stored procedure to delete the task
+        cursor.callproc('DeleteAllTasks', [current_user.id, True])  # False = don't force delete
+        db.commit()
+        
+        return jsonify({'success': True, 'message': 'Task deleted'})
+        
+    except Exception as e:
+        db.rollback()
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 @app.route('/add_task', methods=['POST'])
 @login_required

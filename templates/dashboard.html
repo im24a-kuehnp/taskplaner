@@ -40,9 +40,11 @@
         <p>You have no tasks at the moment.</p>
     {% endif %}
 
-    <form action="{{ url_for('logout') }}" method="POST">
-        <button type="submit">Logout</button>
-    </form>
+<form action="{{ url_for('logout') }}" method="POST" style="display: inline-block; margin-right: 10px;">
+    <button type="submit">Logout</button>
+</form>
+
+<button type="button" onclick="deleteall('{{ current_user.id }}')" style="display: inline-block;">Delete all</button>
 
     <div id="taskPopup" style="display:none; position:fixed; top:10%; left:30%; width:40%; background:white; border:3px solid black; padding:20px; z-index:1000;">
         <h2 id="popupTitle"></h3>
@@ -319,6 +321,29 @@
     
     if (confirm('Are you sure you want to delete this task?')) {
         console.log('Attempting to delete task ID:', taskId);
+        fetch(`/delete_task/${taskId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                //alert('Task deleted successfully!');
+                location.reload(); // Refresh the page
+            } else {
+                alert('Failed to delete task.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the task.');
+        });
+    }
+}
+function deleteall(userid) {
+    if (confirm('Are you sure you want to delete all task?')) {
+        console.log('Attempting to delete tasks');
         fetch(`/delete_task/${taskId}`, {
             method: 'DELETE',
             headers: {
