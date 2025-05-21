@@ -228,7 +228,7 @@ DROP PROCEDURE IF EXISTS DeleteAllTasks;
 DELIMITER //
   
 
-CREATE PROCEDURE DeleteAllTask (
+CREATE PROCEDURE DeleteAllTasks (
     IN p_BenutzerID INT,
     IN p_force BOOLEAN
 )
