@@ -160,7 +160,7 @@ def deleteall():
         print(current_user.id)
         db.commit()
         
-        return jsonify({'success': True, 'message': 'Task deleted'})
+        return jsonify({'success': True, 'message': 'Tasks deleted'})
         
     except Exception as e:
         db.rollback()
