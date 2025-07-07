@@ -112,6 +112,8 @@ BEGIN
         p_DateiBLOB
     );
 END //
+
+DELIMITER ;
   
 DROP PROCEDURE IF EXISTS CreateTaskMaterial;
   
