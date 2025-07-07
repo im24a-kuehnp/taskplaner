@@ -1,0 +1,154 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f6f8;
+    color: #333;
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin: 0;
+}
+
+button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background-color: white;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+table th {
+    background-color: #f0f0f0;
+}
+
+table tr:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+form button {
+    background-color: #d9534f;
+}
+
+form button:hover {
+    background-color: #c9302c;
+}
+
+#taskPopup, #newTaskPopup, #EditTaskPopup {
+    position: fixed;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+#taskPopup h2,
+#newTaskPopup h3,
+#EditTaskPopup h3 {
+    margin-top: 0;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+}
+
+#fileDropArea, #editFileDropArea {
+    border: 2px dashed #bbb;
+    border-radius: 8px;
+    background-color: #fafafa;
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+#fileDropArea:hover, #editFileDropArea:hover {
+    border-color: #888;
+}
+
+#fileList, #editFileList {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#fileList li, #editFileList li {
+    margin: 5px 0;
+    font-size: 13px;
+}
+
+#overlay1, #overlay2 {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+button + button {
+    margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+    #taskPopup, #newTaskPopup, #EditTaskPopup {
+        width: 90%;
+        padding: 15px;
+    }
+
+    div[style*="display: flex"] {
+        flex-direction: column;
+    }
+}
