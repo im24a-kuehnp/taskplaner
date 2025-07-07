@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 # load enviroment file
 load_dotenv()
 
@@ -34,14 +35,8 @@ class User(UserMixin):
         self.id = id
         self.username = username
 
-# function to run sql scripts
-def execute_sql_file(cursor, filepath):
-    with open(filepath, 'r', encoding='utf-8') as file:
-        sql_commands = file.read().split('-- end')
-        for command in sql_commands:
-            command = command.strip()
-            if command:
-                cursor.execute(command)
+
+
 
 # loads user from db and creates class instance
 @login_manager.user_loader
@@ -77,7 +72,7 @@ def login():
         if user_data and check_password_hash(user_data['BenutzerPWD'], password):  # Compare hashed password
             user = User(id=user_data["BenutzerID"], username=username)
             login_user(user)
-            flash('Logged in successfully!', 'success')
+            #flash('Logged in successfully!', 'success')
             return redirect(url_for('dashboard'))
         else:
             flash('Invalid username or password', 'danger')
@@ -278,5 +273,5 @@ def delete_task(task_id):
         return jsonify({'success': False, 'message': str(e)}), 500
     
 if __name__ == "__main__":
-    # execute_sql_file(cursor, r"C:\Users\anmel\GithubRepos\Flask\functions.sql")
     app.run(debug=True)
+    flash('IT WORKS')
