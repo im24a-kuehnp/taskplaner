@@ -40,7 +40,7 @@
         <p>You have no tasks at the moment.</p>
     {% endif %}
 
-<form action="{{ url_for('logout') }}" method="POST" style="display: inline-block; margin-right: 10px;">
+<form action="{{ url_for('auth.logout') }}" method="POST" style="display: inline-block; margin-right: 10px;">
     <button type="submit">Logout</button>
 </form>
 
