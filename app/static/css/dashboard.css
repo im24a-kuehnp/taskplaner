@@ -62,21 +62,23 @@ form button:hover {
     background-color: #c9302c;
 }
 
-taskPopup, #newTaskPopup, #EditTaskPopup {
+#taskPopup, #newTaskPopup, #EditTaskPopup {
     position: fixed;
-    top: 8%;
+    top: 8vh;
     left: 50%;
     transform: translateX(-50%);
     width: 50%;
     max-width: 600px;
+    max-height: calc(100vh - 16vh); /* 8vh top + 8vh bottom */
+    overflow-y: auto;
+    overflow-x: hidden;
     background-color: #fff;
     border-radius: 10px;
     padding: 25px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     z-index: 1000;
-    max-height: 90vh;
-    overflow-y: auto;
 }
+
 
 
 #taskPopup h2,
@@ -101,6 +103,13 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  max-width: calc(100vw - 20px); /* prevent overflow */
 }
 
 textarea {
