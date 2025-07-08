@@ -34,15 +34,6 @@ class User(UserMixin):
         self.id = id
         self.username = username
 
-# function to run sql scripts
-def execute_sql_file(cursor, filepath):
-    with open(filepath, 'r', encoding='utf-8') as file:
-        sql_commands = file.read().split('-- end')
-        for command in sql_commands:
-            command = command.strip()
-            if command:
-                cursor.execute(command)
-
 # loads user from db and creates class instance
 @login_manager.user_loader
 def load_user(user_id):
